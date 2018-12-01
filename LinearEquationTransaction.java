@@ -24,18 +24,30 @@ public class LinearEquationTransaction extends ScriptTransaction {
     @Override
     public Script createInputScript() {
         // TODO: Create a script that can be spend by two numbers x and y such that x+y=first 4 digits of your suid and |x-y|=last 4 digits of your suid (perhaps +1)
-        ScriptBuilder builder = new ScriptBuilder();
-        BigInteger firstAndThird, lastTwo;
-        firstAndThird = new BigInteger("51");
-        lastTwo = new BigInteger("39");
-        
-    	return null;
+    	ScriptBuilder builder = new ScriptBuilder();
+    	
+    	// Thammasat Student number = 5810742139
+    	BigInteger firstAndThirdDigits = new BigInteger("51");
+    	BigInteger lastTwoDigits = new BigInteger("39");
+        builder.op(OP_2DUP);
+        builder.op(OP_ADD);
+        builder.data(encode(firstAndThirdDigits));
+        builder.op(OP_EQUALVERIFY);
+        builder.op(OP_SUB);
+        builder.data(encode(lastTwoDigits));
+        builder.op(OP_EQUAL);
+        return builder.build();
     }
 
     @Override
     public Script createRedemptionScript(Transaction unsignedScript) {
         // TODO: Create a spending script
-        return null;
+    	ScriptBuilder builder = new ScriptBuilder();
+        BigInteger x = new BigInteger("45");
+        BigInteger y = new BigInteger("6");
+        builder.data(encode(x));
+        builder.data(encode(y));
+        return builder.build();
     }
 
     private byte[] encode(BigInteger bigInteger) {
